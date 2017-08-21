@@ -9,6 +9,7 @@ namespace LoLApp.Models
 {
     public class Champion
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         [Column("champID")]
         public int id { get; set; }
         public string title { get; set; }

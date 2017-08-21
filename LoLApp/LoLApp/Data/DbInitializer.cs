@@ -26,19 +26,20 @@ namespace LoLApp.Data
             var apiCall = new API();
 
             string champData = apiCall.HttpGet(url, param, key);
+            //string champData = null;
+            var jArray = JsonConvert.DeserializeObject<RootChampionDTO>(champData);
 
-            if (!String.IsNullOrWhiteSpace(champData))
+            foreach (KeyValuePair<string, Champion> champ in jArray.Data)
+
             {
-                var jArray = JsonConvert.DeserializeObject<RootChampionDTO>(champData);
-
-                foreach (KeyValuePair<string, Champion> champ in jArray.Data)
-
-                {
-                    context.Champions.Add(champ.Value);
-                }
-
-                context.SaveChanges();
+                Champion ch = champ.Value;
+                context.Champions.Add(ch);
+                
             }
+
+          
+            context.SaveChanges();    
+            
         }
     }
 }

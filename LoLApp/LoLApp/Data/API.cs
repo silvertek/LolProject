@@ -13,35 +13,22 @@ namespace LoLApp.Data
         public string HttpGet(string api, string param, string key)
         {
             var uri = api + param + "&" + key;
+            
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uri);
+            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+
             try
             {
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uri);
-                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-
-                try
+                using (Stream stream = response.GetResponseStream())
                 {
-                    using (Stream stream = response.GetResponseStream())
-                    {
-                        StreamReader reader = new StreamReader(stream);
+                    StreamReader reader = new StreamReader(stream);
 
-                        return reader.ReadToEnd();
-                    }
+                    return reader.ReadToEnd();
                 }
-                finally
-                {
-                    response.Close();
-                }
-
-
             }
-            catch (WebException ex)
+            finally
             {
-                using (var stream = ex.Response.GetResponseStream())
-                using (var reader = new StreamReader(stream))
-                {
-                    Console.WriteLine(reader.ReadToEnd());
-                    return null;
-                }
+                response.Close();
             }
         }
     }
